@@ -19,16 +19,20 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: Install-Module -Name AWS.Tools.Installer -Force
-        
-      - name: Run a one-line script
-        run: Install-AWSToolsModule AWS.Tools.S3 -CleanUp -Force
+      - name: Run a multi-line script
+        run: dir
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
           Install-Module -Name AWS.Tools.Installer -Force
           Install-AWSToolsModule AWS.Tools.S3 -CleanUp -Force
+          Set-AWSCredential -AccessKey ${{ secrets.S3_API_KEY }} -SecretKey ${{ secrets.S3_SECRET_KEY }} -StoreAs myProfileName
+          Set-AWSCredential -ProfileName myProfileName
+          Set-DefaultAWSRegion -Region us-east-1
+          Read-S3Object -BucketName ${{ secrets.S3_BUCKET }} -Key docker/artifacts/B.02.03/app/dnSpy-net-win64.zip -File .\dnSpy-net-win64.zip
+          Expand-Archive -path .\dnSpy-net-win64.zip -DestinationPath .\dnSpy-net-win64
+          Remove-Item -Path .\dnSpy-net-win64.zip -Force
           
+      - name: Run a multi-line script
+        run: dir
