@@ -6,7 +6,11 @@ name: CI
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
+    inputs:
+      iecgVersion:  # ${{ github.event.inputs.iecgVersion }}
+        description: 'The version of ISECG'     
+        required: true
+        default: 'B.02.03'
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -30,7 +34,7 @@ jobs:
           Set-AWSCredential -AccessKey ${{ secrets.S3_API_KEY }} -SecretKey ${{ secrets.S3_SECRET_KEY }} -StoreAs myProfileName
           Set-AWSCredential -ProfileName myProfileName
           Set-DefaultAWSRegion -Region us-east-1
-          Read-S3Object -BucketName ${{ secrets.S3_BUCKET }} -Key docker/artifacts/B.02.03/app/dnSpy-net-win64.zip -File .\dnSpy-net-win64.zip
+          Read-S3Object -BucketName ${{ secrets.S3_BUCKET }} -Key docker/artifacts/${{ github.event.inputs.iecgVersion }}/app/dnSpy-net-win64.zip -File .\dnSpy-net-win64.zip
           Expand-Archive -path .\dnSpy-net-win64.zip -DestinationPath .\dnSpy-net-win64
           Remove-Item -Path .\dnSpy-net-win64.zip -Force
           
