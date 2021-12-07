@@ -35,4 +35,4 @@ jobs:
           Remove-Item -Path .\dnSpy-net-win64.zip -Force
           
       - name: Run a multi-line script
-        run: dir
+        run: dir ./dnSpy-net-win64
